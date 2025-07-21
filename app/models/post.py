@@ -10,7 +10,7 @@ if TYPE_CHECKING:
 
 class Post(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), index=True)
     text: Mapped[Optional[str]]
     image: Mapped[Optional[str]]
     time_posted: Mapped[DateTime]

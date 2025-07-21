@@ -24,17 +24,12 @@ def login():
     id_token = request.json.get('credential')
     google_user = verify_google_token(id_token)
 
-    print(google_user)
-
     if not google_user:
         return jsonify(msg='Invalid Google token'), 401
 
     user_id = google_user['sub']
-    print(user_id)
-    # (Optionally create/check user in your DB)
     access = create_access_token(identity=user_id)
     refresh = create_refresh_token(identity=user_id)
-    print(access, refresh)
     return jsonify(access_token=access, refresh_token=refresh)
 
 @bp.post('/refresh')

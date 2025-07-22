@@ -14,3 +14,4 @@ class Post(db.Model):
     text: Mapped[Optional[str]]
     image: Mapped[Optional[str]]
     time_posted: Mapped[DateTime]
+    likes: Mapped[list['Like']] = relationship(back_populates='post')

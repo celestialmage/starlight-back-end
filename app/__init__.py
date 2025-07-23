@@ -3,6 +3,10 @@ from flask_jwt_extended import JWTManager
 from .db import db, migrate
 from flask_cors import CORS
 import os
+from .models.user import User
+from .models.post import Post
+from .models.like import Like
+from .models.follow import Follow
 
 # Import models, blueprints, and anything else needed to set up the app or database
 from .routes.google_routes import bp as api_bp

@@ -15,7 +15,7 @@ class Reply(db.Model):
     post_id: Mapped[int] = mapped_column(ForeignKey('post.id'))
     text: Mapped[Optional[str]]
     image: Mapped[Optional[str]]
-    time_posted: Mapped[DateTime]
+    time_posted: Mapped[datetime.datetime] = mapped_column(DateTime())
     post: Mapped['Post'] = relationship(back_populates='post')
 
 def to_dict(self):

@@ -25,5 +25,5 @@ class Follow(db.Model):
 
 
     __table_args__ = (
-        UniqueConstraint("follower_id", "followed_id", name="unique_follower_followed")
+        UniqueConstraint("follower_id", "followed_id", name="unique_follower_followed"),
     )

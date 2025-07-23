@@ -5,6 +5,7 @@ from flask_cors import CORS
 import os
 from .models.user import User
 from .models.post import Post
+from .models.reply import Reply
 from .models.like import Like
 from .models.follow import Follow
 

@@ -10,5 +10,5 @@ class Like(db.Model):
     user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
     
     __table_args__ = (
-        UniqueConstraint("user_id", "post_id", name="unique_user_post_like")
+        UniqueConstraint("user_id", "post_id", name="unique_user_post_like"),
     )

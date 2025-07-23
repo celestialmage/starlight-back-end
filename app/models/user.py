@@ -30,7 +30,7 @@ class User(db.Model):
         'Follow',
         foreign_keys='[Follow.followed_id]',
         back_populates='followed',
-        cascade='all, delete-oprhan'
+        cascade='all, delete-orphan'
     )
 
     following: Mapped[list['User']] = relationship(

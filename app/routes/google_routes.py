@@ -21,6 +21,8 @@ def send_whatever():
 @bp.post('/login')
 def login():
 
+    print(request)
+
     id_token = request.json.get('credential')
     google_user = verify_google_token(id_token)
 

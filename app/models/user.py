@@ -3,11 +3,12 @@ from sqlalchemy import ForeignKey
 from typing import Optional
 from ..db import db
 from typing import TYPE_CHECKING
+from .like import Like
+from .follow import Follow
+
 
 if TYPE_CHECKING:
     from .post import Post
-    from .like import Like
-    from .follow import Follow
 
 class User(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
@@ -17,7 +18,7 @@ class User(db.Model):
     email: Mapped[str]
 
     posts: Mapped[list['Post']] = relationship(back_populates='user')
-    likes: Mapped[list['Post']] = relationship(secondary='Like', back_populates='liked_by')
+    likes: Mapped[list['Post']] = relationship(secondary=Like.__table__, back_populates='liked_by')
     
     following_associations: Mapped[list['Follow']] = relationship(
         'Follow',
@@ -35,7 +36,7 @@ class User(db.Model):
 
     following: Mapped[list['User']] = relationship(
         'User',
-        secondary='Follow',
+        secondary=Follow.__table__,
         primaryjoin='User.id==Follow.follower_id',
         secondaryjoin='User.id==Follow.followed_id',
         backref='followers',

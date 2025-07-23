@@ -23,7 +23,6 @@ class Follow(db.Model):
         back_populates="follower_associations"
     )
 
-
     __table_args__ = (
         UniqueConstraint("follower_id", "followed_id", name="unique_follower_followed"),
     )

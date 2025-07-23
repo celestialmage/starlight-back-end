@@ -15,8 +15,8 @@ class User(db.Model):
     display_name: Mapped[str]
     email: Mapped[str]
     posts: Mapped[list['Post']] = relationship(back_populates='user')
-    likes: Mapped[list['Like']] = relationship(back_populates='user')
-    follows: Mapped[list['Follow']] = relationship(back_populates='user')
+    likes: Mapped[list['Post']] = relationship(secondary='Like', back_populates='liked_by')
+    follows: Mapped[list['Follow']] = relationship(secondary='Follow', back_populates='user')
 
     def to_dict(self):
 
@@ -27,6 +27,15 @@ class User(db.Model):
             'display_name': self.display_name,
             'email': self.email
         }
+    
+    def get_posts(self):
+        return self.posts
+    
+    def get_likes(self):
+        return self.likes
+    
+    def get_follows(self):
+        return self.follows
     
     @classmethod
     def from_dict(cls, user_data):

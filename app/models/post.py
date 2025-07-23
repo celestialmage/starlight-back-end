@@ -6,7 +6,8 @@ from ..db import db
 from typing import TYPE_CHECKING
 
 if TYPE_CHECKING:
-    pass
+    from .user import User
+    from .reply import Reply
 
 class Post(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
@@ -14,4 +15,5 @@ class Post(db.Model):
     text: Mapped[Optional[str]]
     image: Mapped[Optional[str]]
     time_posted: Mapped[DateTime]
-    likes: Mapped[list['Like']] = relationship(back_populates='post')
+    liked_by: Mapped[list['User']] = relationship(secondary='Like', back_populates='likes')
+    replies: Mapped[list['Reply']] = relationship(back_populates='post')

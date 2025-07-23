@@ -1,4 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
+from sqlalchemy import ForeignKey
 from typing import Optional
 from ..db import db
 from typing import TYPE_CHECKING
@@ -14,9 +15,32 @@ class User(db.Model):
     bio: Mapped[str]
     display_name: Mapped[str]
     email: Mapped[str]
+
     posts: Mapped[list['Post']] = relationship(back_populates='user')
     likes: Mapped[list['Post']] = relationship(secondary='Like', back_populates='liked_by')
-    follows: Mapped[list['Follow']] = relationship(secondary='Follow', back_populates='user')
+    
+    following_associations: Mapped[list['Follow']] = relationship(
+        'Follow',
+        foreign_keys='[Follow.follower_id]',
+        back_populates='follower',
+        cascade='all, delete-orphan'
+    )
+
+    follower_associations: Mapped[list['Follow']] = relationship(
+        'Follow',
+        foreign_keys='[Follow.followed_id]',
+        back_populates='followed',
+        cascade='all, delete-oprhan'
+    )
+
+    following: Mapped[list['User']] = relationship(
+        'User',
+        secondary='Follow',
+        primaryjoin='User.id==Follow.follower_id',
+        secondaryjoin='User.id==Follow.followed_id',
+        backref='followers',
+        viewonly=True
+    )
 
     def to_dict(self):
 
@@ -34,8 +58,11 @@ class User(db.Model):
     def get_likes(self):
         return self.likes
     
-    def get_follows(self):
-        return self.follows
+    def get_following(self):
+        return self.following
+    
+    def get_followers(self):
+        return self.followers
     
     @classmethod
     def from_dict(cls, user_data):

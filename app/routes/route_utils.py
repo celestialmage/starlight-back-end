@@ -9,6 +9,9 @@ def validate_model(cls, model_id):
         response = { 'message': f'{cls.__name__} {model_id} invalid.' }
         abort(make_response(response, 400))
 
+    if cls.__name__ == "User":
+        model_id = str(model_id)
+
     query = db.select(cls).where(cls.id == model_id)
     model = db.session.scalar(query)
 

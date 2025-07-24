@@ -9,8 +9,8 @@ if TYPE_CHECKING:
 
 class Follow(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    follower_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
-    followed_id: Mapped[int] = mapped_column(ForeignKey('user.id'), nullable=False)
+    follower_id: Mapped[str] = mapped_column(ForeignKey('user.id'), nullable=False)
+    followed_id: Mapped[str] = mapped_column(ForeignKey('user.id'), nullable=False)
 
     follower: Mapped['User'] = relationship(
         'User',

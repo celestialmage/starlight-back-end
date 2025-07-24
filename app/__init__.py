@@ -11,6 +11,7 @@ from .models.follow import Follow
 
 # Import models, blueprints, and anything else needed to set up the app or database
 from .routes.google_routes import bp as api_bp
+from .routes.user_routes import bp as user_bp
 
 
 def create_app(config=None):
@@ -37,7 +38,7 @@ def create_app(config=None):
     # Register Blueprints 
 
     app.register_blueprint(api_bp)
-
+    app.register_blueprint(user_bp)
 
     CORS(app)
     return app

@@ -11,7 +11,7 @@ if TYPE_CHECKING:
 
 class Reply(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[int] = mapped_column(ForeignKey('user.id'), index=True)
+    user_id: Mapped[str] = mapped_column(ForeignKey('user.id'), index=True)
     post_id: Mapped[int] = mapped_column(ForeignKey('post.id'))
     text: Mapped[Optional[str]]
     image: Mapped[Optional[str]]

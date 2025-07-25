@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import DateTime, ForeignKey
 import datetime
+from datetime import datetime as time
 from typing import Optional
 from ..db import db
 from typing import TYPE_CHECKING
@@ -20,17 +21,30 @@ class Post(db.Model):
     liked_by: Mapped[list['User']] = relationship(secondary=Like.__table__, back_populates='likes')
     replies: Mapped[list['Reply']] = relationship(back_populates='post')
 
-def to_dict(self):
-    return {
-        "id": self.id,
-        "user_id": self.user_id,
-        "text": self.text,
-        "image": self.image,
-        "time_posted": self.time_posted
+    def get_replies(self):
+        return self.replies
+
+    def get_liked_by(self):
+        return self.liked_by
+
+    def liked_count(self):
+        return len(self.liked_by)
+
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "text": self.text,
+            "image": self.image,
+            "time_posted": self.time_posted
     }
 
-def get_liked_by(self):
-    return self.liked_by
+    @classmethod
+    def from_dict(cls, post_data):
+        new_post = Post(
+            user_id=post_data['user_id'],
+            text=post_data["text"],
+            time_posted=time.now()
+        )
 
-def liked_count(self):
-    return len(self.liked_by)
+        return new_post

@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from sqlalchemy import ForeignKey
+from sqlalchemy import ForeignKey, BigInteger
 from typing import Optional
 from ..db import db
 from typing import TYPE_CHECKING
@@ -11,11 +11,11 @@ if TYPE_CHECKING:
     from .post import Post
 
 class User(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
+    id: Mapped[str] = mapped_column(primary_key=True, index=True, unique=True)
     username: Mapped[str]
     bio: Mapped[str]
     display_name: Mapped[str]
-    email: Mapped[str]
+    email: Mapped[str] = mapped_column(unique=True)
 
     posts: Mapped[list['Post']] = relationship(back_populates='user')
     likes: Mapped[list['Post']] = relationship(secondary=Like.__table__, back_populates='liked_by')
@@ -65,11 +65,20 @@ class User(db.Model):
     def get_followers(self):
         return self.followers
     
+    def edit_profile(self, user_data):
+        if user_data.get("display_name"):
+            self.display_name = user_data["display_name"]
+        if user_data.get("bio"):
+            self.bio = user_data["bio"]
+    
     @classmethod
     def from_dict(cls, user_data):
-        return cls(
+
+        new_user = User(
             username=user_data['username'],
             display_name=user_data['display_name'],
             bio=user_data['bio'],
-            email=user_data['email']
+            id=user_data['id']
         )
+
+        return new_user

@@ -1,8 +1,11 @@
 import requests
 from flask import request, jsonify, Blueprint, Response
 from flask_jwt_extended import create_access_token, create_refresh_token, jwt_required, get_jwt_identity
+from .route_utils import validate_model
+from ..models.user import User
+from werkzeug.exceptions import HTTPException
 
-bp = Blueprint('api', __name__, url_prefix='/api')
+bp = Blueprint('api_bp', __name__, url_prefix='/api')
 
 def verify_google_token(id_token):
     resp = requests.get('https://oauth2.googleapis.com/tokeninfo', params={'id_token': id_token})
@@ -28,9 +31,17 @@ def login():
         return jsonify(msg='Invalid Google token'), 401
 
     user_id = google_user['sub']
+
+    user_found = True
+
+    try:
+        user = validate_model(User, user_id)
+    except HTTPException:
+        user_found = False
+        
     access = create_access_token(identity=user_id)
     refresh = create_refresh_token(identity=user_id)
-    return jsonify(access_token=access, refresh_token=refresh)
+    return jsonify(access_token=access, refresh_token=refresh, user_found=user_found)
 
 @bp.post('/refresh')
 @jwt_required

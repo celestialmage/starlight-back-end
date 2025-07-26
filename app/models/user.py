@@ -77,6 +77,7 @@ class User(db.Model):
         new_user = User(
             username=user_data['username'],
             display_name=user_data['display_name'],
+            email=user_data['email'],
             bio=user_data['bio'],
             id=user_data['id']
         )

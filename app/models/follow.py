@@ -23,6 +23,26 @@ class Follow(db.Model):
         back_populates="follower_associations"
     )
 
+    def to_dict(self):
+        follow = {
+            "id": self.id,
+            "follower_id": self.follower_id,
+            "followed_id": self.followed_id
+        }
+
+        return follow
+
+    @classmethod
+    def from_dict(cls, follow_data):
+        new_follow = Follow(
+            follower_id=follow_data['follower_id'],
+            followed_id=follow_data['followed_id']
+        )
+
+        return new_follow
+    
+
+
     __table_args__ = (
         UniqueConstraint("follower_id", "followed_id", name="unique_follower_followed"),
     )

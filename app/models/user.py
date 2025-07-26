@@ -78,7 +78,6 @@ class User(db.Model):
             username=user_data['username'],
             display_name=user_data['display_name'],
             bio=user_data['bio'],
-            email=user_data['email'],
             id=user_data['id']
         )
 

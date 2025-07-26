@@ -6,9 +6,9 @@ from typing import Optional
 from ..db import db
 from typing import TYPE_CHECKING
 from .like import Like
+from .user import User
 
 if TYPE_CHECKING:
-    from .user import User
     from .reply import Reply
 
 class Post(db.Model):
@@ -30,14 +30,19 @@ class Post(db.Model):
     def liked_count(self):
         return len(self.liked_by)
 
-    def to_dict(self):
-        return {
+    def to_dict(self, user=False):
+        post = {
             "id": self.id,
             "user_id": self.user_id,
             "text": self.text,
             "image": self.image,
             "time_posted": self.time_posted
-    }
+        }
+
+        if user:
+            post['user'] = self.user.to_dict()
+
+        return post
 
     @classmethod
     def from_dict(cls, post_data):

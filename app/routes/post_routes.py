@@ -1,11 +1,13 @@
 import requests
 from flask import request, jsonify, Blueprint, Response, abort, make_response
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import or_
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from .route_utils import validate_model, model_from_request
 from ..db import db
 from ..models.post import Post
 from ..models.user import User
+from ..models.user import Follow
 
 bp = Blueprint('post_bp', __name__, url_prefix='/posts')
 
@@ -69,3 +71,27 @@ def get_user_posts(user_id):
     }
 
     return jsonify(response), 200
+
+@bp.get('/timeline')
+@jwt_required()
+def get_user_timeline():
+
+    user_id = get_jwt_identity()
+
+    query = db.select(Follow).where(Follow.follower_id == user_id)
+    follow_ids = db.session.scalars(query)
+
+    followed_ids = [follow.followed_id for follow in follow_ids]
+
+    print(user_id, followed_ids) 
+
+    query = db.select(Post).where(or_(Post.user_id.in_(followed_ids), Post.user_id == user_id)).order_by(Post.time_posted)
+    timeline = db.session.scalars(query)
+
+    timeline_response = [post.to_dict(user=True) for post in timeline]
+
+    print(timeline_response)
+
+    return {
+        "posts": timeline_response
+    }, 200

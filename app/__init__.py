@@ -13,6 +13,8 @@ from .models.follow import Follow
 from .routes.google_routes import bp as api_bp
 from .routes.user_routes import bp as user_bp
 from .routes.post_routes import bp as post_bp
+from .routes.follow_routes import bp as follow_bp
+from .routes.like_routes import bp as like_bp
 
 
 def create_app(config=None):
@@ -41,6 +43,8 @@ def create_app(config=None):
     app.register_blueprint(api_bp)
     app.register_blueprint(user_bp)
     app.register_blueprint(post_bp)
+    app.register_blueprint(follow_bp)
+    app.register_blueprint(like_bp)
 
     CORS(app)
     return app

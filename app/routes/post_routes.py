@@ -45,9 +45,6 @@ def delete_post(post_id):
 
     post = validate_model(Post, post_id)
 
-    print(user_id, post.user_id)
-    print(type(user_id), type(post.user_id))
-
     if user_id == post.user_id:
         db.session.delete(post)
         db.session.commit()
@@ -83,14 +80,10 @@ def get_user_timeline():
 
     followed_ids = [follow.followed_id for follow in follow_ids]
 
-    print(user_id, followed_ids) 
-
     query = db.select(Post).where(or_(Post.user_id.in_(followed_ids), Post.user_id == user_id)).order_by(Post.time_posted)
     timeline = db.session.scalars(query)
 
     timeline_response = [post.to_dict(user=True) for post in timeline]
-
-    print(timeline_response)
 
     return {
         "posts": timeline_response

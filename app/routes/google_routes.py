@@ -44,7 +44,7 @@ def login():
     return jsonify(access_token=access, refresh_token=refresh, user_found=user_found)
 
 @bp.post('/refresh')
-@jwt_required
+@jwt_required(refresh=True)
 def refresh():
     user_id = get_jwt_identity()
     new_token = create_access_token(identity=user_id)

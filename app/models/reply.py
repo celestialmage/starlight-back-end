@@ -1,6 +1,7 @@
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from sqlalchemy import DateTime, ForeignKey
 import datetime
+from datetime import datetime as time
 from typing import Optional
 from ..db import db
 from typing import TYPE_CHECKING
@@ -18,12 +19,24 @@ class Reply(db.Model):
     time_posted: Mapped[datetime.datetime] = mapped_column(DateTime())
     post: Mapped['Post'] = relationship(back_populates='replies')
 
-def to_dict(self):
-    return {
-        "id": self.id,
-        "user_id": self.user_id,
-        "post_id": self.post_id,
-        "text": self.text,
-        "image": self.image,
-        "time_posted": self.time_posted
-    }
+    def to_dict(self):
+        return {
+            "id": self.id,
+            "user_id": self.user_id,
+            "post_id": self.post_id,
+            "text": self.text,
+            "image": self.image,
+            "time_posted": self.time_posted
+        }
+
+    @classmethod
+    def from_dict(cls, reply_data):
+
+        new_reply = Reply(
+            user_id=reply_data['user_id'],
+            post_id=reply_data['post_id'],
+            text=reply_data['text'],
+            time_posted=time.now()
+        )
+
+        return new_reply

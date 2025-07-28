@@ -66,10 +66,10 @@ class User(db.Model):
         return self.followers
     
     def edit_profile(self, user_data):
-        if user_data.get("display_name"):
-            self.display_name = user_data["display_name"]
-        if user_data.get("bio"):
-            self.bio = user_data["bio"]
+        if user_data.get('display_name'):
+            self.display_name = user_data['display_name']
+        if user_data.get('bio'):
+            self.bio = user_data['bio']
     
     @classmethod
     def from_dict(cls, user_data):

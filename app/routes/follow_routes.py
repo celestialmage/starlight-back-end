@@ -17,8 +17,8 @@ def follow_user(followed_user_id):
     user_id = get_jwt_identity()
 
     follow_data = {
-        "follower_id": user_id,
-        "followed_id": followed_user_id
+        'follower_id': user_id,
+        'followed_id': followed_user_id
     }
 
     try:
@@ -27,10 +27,10 @@ def follow_user(followed_user_id):
         db.session.add(new_follow)
         db.session.commit()
     except IntegrityError:
-        response = {"message": "User already followed"}
+        response = {'message': 'User already followed'}
         abort(make_response(response, 409))
 
-    return {"follow": new_follow.to_dict()}
+    return {'follow': new_follow.to_dict()}
 
 @bp.delete('/<followed_user_id>')
 @jwt_required()

@@ -19,7 +19,7 @@ def create_post():
 
     request_body = request.get_json()
 
-    request_body["user_id"] = user_id
+    request_body['user_id'] = user_id
 
     request_body = jsonify(request_body)
 
@@ -32,7 +32,7 @@ def create_post():
     db.session.commit()
 
     response = {
-        "post": new_post.to_dict()
+        'post': new_post.to_dict()
     }
 
     return response, 201
@@ -49,7 +49,7 @@ def delete_post(post_id):
         db.session.delete(post)
         db.session.commit()
     else:
-        response = { "message": "user is not the author of this tweet." }
+        response = { 'message': 'user is not the author of this tweet.' }
         abort(make_response(response, 403))
 
     return Response(status=204, mimetype='application/json')
@@ -64,7 +64,7 @@ def get_user_posts(user_id):
     posts = [post.to_dict() for post in user.posts]
 
     response = {
-        "posts": posts
+        'posts': posts
     }
 
     return jsonify(response), 200
@@ -86,5 +86,5 @@ def get_user_timeline():
     timeline_response = [post.to_dict(user=True) for post in timeline]
 
     return {
-        "posts": timeline_response
+        'posts': timeline_response
     }, 200

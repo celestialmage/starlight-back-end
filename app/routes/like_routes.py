@@ -1,6 +1,7 @@
 import requests
 from flask import request, jsonify, Blueprint, Response, abort, make_response
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import and_
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from .route_utils import validate_model, model_from_request
 from ..db import db
@@ -16,8 +17,8 @@ def like_post(post_id):
     user_id = get_jwt_identity()
 
     like_data = {
-        "post_id": post_id,
-        "user_id": user_id
+        'post_id': post_id,
+        'user_id': user_id
     }
 
     try:
@@ -27,7 +28,25 @@ def like_post(post_id):
         db.session.commit()
 
     except:
-        response = {"message": "Post already liked"}
+        response = {'message': 'Post already liked'}
         abort(make_response(response, 409))
 
-    return {"like": new_like.to_dict()}
+    return {'like': new_like.to_dict()}
+
+@bp.delete('/<post_id>')
+@jwt_required()
+def unlike_post(post_id):
+
+    user_id = get_jwt_identity()
+    
+    query = db.select(Like).where(and_(Like.post_id == post_id, Like.user_id == user_id))
+    like = db.session.scalar(query)
+
+    if not like:
+        response = {'message': 'Like not found'}
+        abort(make_response(response, 404))
+
+    db.session.delete(like)
+    db.session.commit()
+
+    return Response(status=204, mimetype='application/json')

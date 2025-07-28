@@ -21,10 +21,10 @@ def create_user():
         db.session.add(new_user)
         db.session.commit()
     except IntegrityError as error:
-        response = { "message": f"Username {new_user.username} is already taken." }
+        response = { 'message': f'Username {new_user.username} is already taken.' }
         abort(make_response(response, 409))
 
-    return {"user": new_user.to_dict()}, 201
+    return {'user': new_user.to_dict()}, 201
 
 @bp.get('')
 @jwt_required()
@@ -35,7 +35,7 @@ def get_user():
     user = validate_model(User, user_id)
 
     response = {
-        "user": user.to_dict()
+        'user': user.to_dict()
     }
 
     return response, 200
@@ -56,4 +56,4 @@ def edit_profile():
 
     db.session.commit()
 
-    return { "user": user.to_dict() }, 200
+    return { 'user': user.to_dict() }, 200

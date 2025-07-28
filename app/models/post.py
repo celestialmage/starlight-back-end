@@ -32,11 +32,13 @@ class Post(db.Model):
 
     def to_dict(self, user=False):
         post = {
-            "id": self.id,
-            "user_id": self.user_id,
-            "text": self.text,
-            "image": self.image,
-            "time_posted": self.time_posted
+            'id': self.id,
+            'user_id': self.user_id,
+            'text': self.text,
+            'image': self.image,
+            'time_posted': self.time_posted,
+            'reply_count': len(self.replies),
+            'like_count': len(self.liked_by)
         }
 
         if user:
@@ -48,7 +50,7 @@ class Post(db.Model):
     def from_dict(cls, post_data):
         new_post = Post(
             user_id=post_data['user_id'],
-            text=post_data["text"],
+            text=post_data['text'],
             time_posted=time.now()
         )
 

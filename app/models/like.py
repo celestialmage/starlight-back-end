@@ -11,9 +11,9 @@ class Like(db.Model):
     
     def to_dict(self):
         return {
-            "id": self.id,
-            "post_id": self.post_id,
-            "user_id": self.user_id
+            'id': self.id,
+            'post_id': self.post_id,
+            'user_id': self.user_id
         }
     
     @classmethod
@@ -27,5 +27,5 @@ class Like(db.Model):
 
 
     __table_args__ = (
-        UniqueConstraint("user_id", "post_id", name="unique_user_post_like"),
+        UniqueConstraint('user_id', 'post_id', name='unique_user_post_like'),
     )

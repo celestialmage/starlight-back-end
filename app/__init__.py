@@ -15,7 +15,7 @@ from .routes.user_routes import bp as user_bp
 from .routes.post_routes import bp as post_bp
 from .routes.follow_routes import bp as follow_bp
 from .routes.like_routes import bp as like_bp
-
+from .routes.reply_routes import bp as reply_bp
 
 def create_app(config=None):
     app = Flask(__name__)
@@ -45,6 +45,7 @@ def create_app(config=None):
     app.register_blueprint(post_bp)
     app.register_blueprint(follow_bp)
     app.register_blueprint(like_bp)
+    app.register_blueprint(reply_bp)
 
     CORS(app)
     return app

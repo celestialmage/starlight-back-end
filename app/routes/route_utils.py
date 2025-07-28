@@ -9,7 +9,7 @@ def validate_model(cls, model_id):
         response = { 'message': f'{cls.__name__} {model_id} invalid.' }
         abort(make_response(response, 400))
 
-    if cls.__name__ == "User":
+    if cls.__name__ == 'User':
         model_id = str(model_id)
 
     query = db.select(cls).where(cls.id == model_id)
@@ -43,7 +43,7 @@ def create_model(cls, model_data):
         new_model = cls.from_dict(model_data)
         
     except KeyError as error:
-        response = {"details": f"Invalid data. Missing {error.args[0]}"}
+        response = {'details': f'Invalid data. Missing {error.args[0]}'}
         abort(make_response(response, 400))
     
     db.session.add(new_model)

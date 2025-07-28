@@ -20,14 +20,14 @@ class Follow(db.Model):
     followed: Mapped['User'] = relationship(
         'User',
         foreign_keys=[followed_id],
-        back_populates="follower_associations"
+        back_populates='follower_associations'
     )
 
     def to_dict(self):
         follow = {
-            "id": self.id,
-            "follower_id": self.follower_id,
-            "followed_id": self.followed_id
+            'id': self.id,
+            'follower_id': self.follower_id,
+            'followed_id': self.followed_id
         }
 
         return follow
@@ -44,5 +44,5 @@ class Follow(db.Model):
 
 
     __table_args__ = (
-        UniqueConstraint("follower_id", "followed_id", name="unique_follower_followed"),
+        UniqueConstraint('follower_id', 'followed_id', name='unique_follower_followed'),
     )

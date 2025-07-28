@@ -17,7 +17,7 @@ def verify_google_token(id_token):
 @bp.get('')
 def send_whatever():
     return {
-        "message": "hey guys it's me"
+        'message': 'hey guys it\'s me'
     }
 
 @jwt_required

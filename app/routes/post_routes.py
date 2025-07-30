@@ -94,6 +94,8 @@ def get_user_timeline():
 
     user_id = get_jwt_identity()
 
+    user = validate_model(User, user_id)
+
     query = db.select(Follow).where(Follow.follower_id == user_id)
     follow_ids = db.session.scalars(query)
 
@@ -102,7 +104,7 @@ def get_user_timeline():
     query = db.select(Post).where(or_(Post.user_id.in_(followed_ids), Post.user_id == user_id)).order_by(desc(Post.time_posted)).limit(100)
     timeline = db.session.scalars(query)
 
-    timeline_response = [post.to_dict(user=True) for post in timeline]
+    timeline_response = [post.to_dict(user=user) for post in timeline]
 
     return {
         'posts': timeline_response

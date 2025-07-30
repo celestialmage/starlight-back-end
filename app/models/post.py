@@ -38,11 +38,12 @@ class Post(db.Model):
             'image': self.image,
             'time_posted': self.time_posted,
             'reply_count': len(self.replies),
-            'like_count': len(self.liked_by)
+            'like_count': len(self.liked_by),
         }
 
         if user:
             post['user'] = self.user.to_dict()
+            post['user_liked'] = user in self.liked_by
 
         return post
 

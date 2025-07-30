@@ -1,7 +1,7 @@
 import requests
 from flask import request, jsonify, Blueprint, Response, abort, make_response
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy import or_
+from sqlalchemy import or_, desc
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from .route_utils import validate_model, model_from_request
 from ..db import db
@@ -69,6 +69,25 @@ def get_user_posts(user_id):
 
     return jsonify(response), 200
 
+@bp.get('/<post_id>')
+def get_single_post_with_replies(post_id):
+
+    post = validate_model(Post, post_id)
+
+    post_dict = post.to_dict()
+
+    post_dict['replies'] = post.replies
+
+    response = {
+        "post": post_dict
+    }
+
+    response['post']['user'] = post.user.to_dict()
+
+    print(response)
+
+    return response, 200
+
 @bp.get('/timeline')
 @jwt_required()
 def get_user_timeline():
@@ -80,7 +99,7 @@ def get_user_timeline():
 
     followed_ids = [follow.followed_id for follow in follow_ids]
 
-    query = db.select(Post).where(or_(Post.user_id.in_(followed_ids), Post.user_id == user_id)).order_by(Post.time_posted)
+    query = db.select(Post).where(or_(Post.user_id.in_(followed_ids), Post.user_id == user_id)).order_by(desc(Post.time_posted)).limit(100)
     timeline = db.session.scalars(query)
 
     timeline_response = [post.to_dict(user=True) for post in timeline]

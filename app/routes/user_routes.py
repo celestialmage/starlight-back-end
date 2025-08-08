@@ -40,6 +40,25 @@ def get_user():
 
     return response, 200
 
+@bp.get('/<username>')
+@jwt_required()
+def get_user_from_username(username):
+
+    query = db.select(User).where(User.username == username)
+    user = db.session.scalar(query)
+
+    if not user:
+        response = {'message': 'user not found'}
+        abort(make_response(response, 404))
+
+    user_response = {
+        'user': user.to_dict()
+    }
+
+    # user_response['user']['likes'] = user.get_likes()
+
+    return user_response, 200
+
 @bp.patch('')
 @jwt_required()
 def edit_profile():

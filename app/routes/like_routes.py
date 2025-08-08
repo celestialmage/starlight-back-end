@@ -11,6 +11,24 @@ from ..models.like import Like
 
 bp = Blueprint('like_bp', __name__, url_prefix='/likes')
 
+@bp.get('')
+@jwt_required()
+def get_user_likes():
+
+    user_id = get_jwt_identity()
+
+    user = validate_model(User, user_id)
+
+    likes = user.likes
+
+    likes_response = [like.to_dict() for like in likes]
+
+    response = {
+        'likes': likes_response
+    }
+
+    return response, 200
+
 @bp.post('/<post_id>')
 @jwt_required()
 def like_post(post_id):

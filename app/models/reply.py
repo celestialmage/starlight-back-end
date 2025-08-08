@@ -18,6 +18,7 @@ class Reply(db.Model):
     image: Mapped[Optional[str]]
     time_posted: Mapped[datetime.datetime] = mapped_column(DateTime())
     post: Mapped['Post'] = relationship(back_populates='replies')
+    user: Mapped['User'] = relationship(back_populates='replies')
 
     def to_dict(self):
         return {
@@ -26,7 +27,8 @@ class Reply(db.Model):
             "post_id": self.post_id,
             "text": self.text,
             "image": self.image,
-            "time_posted": self.time_posted
+            "time_posted": self.time_posted,
+            "user": self.user.to_dict()
         }
 
     @classmethod

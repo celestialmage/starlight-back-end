@@ -70,21 +70,24 @@ def get_user_posts(user_id):
     return jsonify(response), 200
 
 @bp.get('/<post_id>')
+@jwt_required()
 def get_single_post_with_replies(post_id):
+
+    user_id = get_jwt_identity()
 
     post = validate_model(Post, post_id)
 
-    post_dict = post.to_dict()
+    user = validate_model(User, user_id)
 
-    post_dict['replies'] = post.replies
+    post_dict = post.to_dict(user)
+
+    post_dict['replies'] = [reply.to_dict() for reply in post.replies]
 
     response = {
         "post": post_dict
     }
 
     response['post']['user'] = post.user.to_dict()
-
-    print(response)
 
     return response, 200
 

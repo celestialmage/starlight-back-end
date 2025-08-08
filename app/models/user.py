@@ -9,6 +9,7 @@ from .follow import Follow
 
 if TYPE_CHECKING:
     from .post import Post
+    from .reply import Reply
 
 class User(db.Model):
     id: Mapped[str] = mapped_column(primary_key=True, index=True, unique=True)
@@ -19,6 +20,7 @@ class User(db.Model):
 
     posts: Mapped[list['Post']] = relationship(back_populates='user')
     likes: Mapped[list['Post']] = relationship(secondary=Like.__table__, back_populates='liked_by')
+    replies: Mapped[list['Reply']] = relationship(back_populates='user')
     
     following_associations: Mapped[list['Follow']] = relationship(
         'Follow',
@@ -57,7 +59,7 @@ class User(db.Model):
         return self.posts
     
     def get_likes(self):
-        return self.likes
+        return [like.to_dict() for like in self.likes]
     
     def get_following(self):
         return self.following

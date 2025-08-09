@@ -8,7 +8,7 @@ class Like(db.Model):
     id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
     post_id: Mapped[int] = mapped_column(ForeignKey('post.id'), nullable=False)
     user_id: Mapped[str] = mapped_column(ForeignKey('user.id'), nullable=False)
-    
+
     def to_dict(self):
         return {
             'id': self.id,

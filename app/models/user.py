@@ -19,7 +19,8 @@ class User(db.Model):
     email: Mapped[str] = mapped_column(unique=True)
 
     posts: Mapped[list['Post']] = relationship(back_populates='user')
-    likes: Mapped[list['Post']] = relationship(secondary=Like.__table__, back_populates='liked_by')
+    likes: Mapped[list['Post']] = relationship(secondary=Like.__table__, back_populates='liked_by', order_by="desc(Like.id)"
+)
     replies: Mapped[list['Reply']] = relationship(back_populates='user')
     
     following_associations: Mapped[list['Follow']] = relationship(

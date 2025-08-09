@@ -38,7 +38,6 @@ def like_post(post_id):
         'post_id': post_id,
         'user_id': user_id
     }
-
     try:
         new_like = Like.from_dict(like_data)
 

@@ -1,6 +1,7 @@
 import requests
 from flask import request, jsonify, Blueprint, Response, abort, make_response
 from sqlalchemy.exc import IntegrityError
+from sqlalchemy import or_, func
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from .route_utils import validate_model, model_from_request
 from ..db import db
@@ -76,3 +77,29 @@ def edit_profile():
     db.session.commit()
 
     return { 'user': user.to_dict() }, 200
+
+@bp.get('/search')
+@jwt_required()
+def search_users():
+
+    request_body = request.get_json()
+
+    search_string = request_body['query'].lower()
+
+    query = (
+        db.select(User)
+        .where(
+            or_(
+                func.lower(User.display_name).like(f"%{search_string.lower()}%"),
+                func.lower(User.username).like(f"%{search_string.lower()}%")
+            )
+        )
+    )
+
+    results = db.session.scalars(query)
+
+    query_results = [user.to_dict() for user in results]
+
+    print(query_results)
+
+    return "meow", 200

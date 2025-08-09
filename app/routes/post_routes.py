@@ -32,7 +32,7 @@ def create_post():
     db.session.commit()
 
     response = {
-        'post': new_post.to_dict()
+        'post': new_post.to_dict(True)
     }
 
     return response, 201

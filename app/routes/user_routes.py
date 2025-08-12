@@ -81,13 +81,9 @@ def edit_profile():
 
     return { 'user': user.to_dict() }, 200
 
-@bp.get('/search')
+@bp.get('/search/<search_string>')
 @jwt_required()
-def search_users():
-
-    request_body = request.get_json()
-
-    search_string = request_body['query'].lower()
+def search_users(search_string):
 
     query = (
         db.select(User)
@@ -103,6 +99,8 @@ def search_users():
 
     query_results = [user.to_dict() for user in results]
 
-    print(query_results)
+    response = {
+        'users': query_results
+    }
 
-    return "meow", 200
+    return response, 200

@@ -46,15 +46,24 @@ class User(db.Model):
         viewonly=True
     )
 
-    def to_dict(self):
+    def to_dict(self, all_data=False):
 
-        return {
+        user_dict = {
             'id': self.id,
             'username': self.username,
             'bio': self.bio,
             'display_name': self.display_name,
-            'email': self.email
+            'email': self.email,
+            'following_count': len(self.following),
+            'follower_count': len(self.followers)
         }
+
+        if all_data:
+
+            user_dict['likes'] = [like.to_dict(user=True) for like in self.likes]
+            user_dict['posts'] = [post.to_dict(user=True) for post in self.posts]
+
+        return user_dict
     
     def get_posts(self):
         return self.posts
@@ -67,6 +76,13 @@ class User(db.Model):
     
     def get_followers(self):
         return self.followers
+    
+    def check_if_followed(self, check_user_id):
+
+        follow_ids = [user.id for user in self.following]
+
+        return check_user_id in follow_ids
+
     
     def edit_profile(self, user_data):
         if user_data.get('display_name'):

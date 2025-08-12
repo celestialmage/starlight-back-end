@@ -48,15 +48,18 @@ def get_user_from_username(username):
     query = db.select(User).where(User.username == username)
     user = db.session.scalar(query)
 
+    user_id = get_jwt_identity()
+    client_user = validate_model(User, user_id)
+
     if not user:
         response = {'message': 'user not found'}
         abort(make_response(response, 404))
 
     user_response = {
-        'user': user.to_dict()
+        'user': user.to_dict(all_data=True)
     }
 
-    # user_response['user']['likes'] = user.get_likes()
+    user_response['user']['is_followed'] = client_user.check_if_followed(user.id)
 
     return user_response, 200
 

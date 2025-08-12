@@ -104,7 +104,7 @@ def get_user_timeline():
 
     followed_ids = [follow.followed_id for follow in follow_ids]
 
-    query = db.select(Post).where(or_(Post.user_id.in_(followed_ids), Post.user_id == user_id)).order_by(desc(Post.time_posted)).limit(100)
+    query = db.select(Post).where(or_(Post.user_id.in_(followed_ids), Post.user_id == user_id)).order_by(desc(Post.id)).limit(100)
     timeline = db.session.scalars(query)
 
     timeline_response = [post.to_dict(user=user) for post in timeline]

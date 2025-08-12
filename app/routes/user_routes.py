@@ -45,7 +45,7 @@ def get_user():
 @jwt_required()
 def get_user_from_username(username):
 
-    query = db.select(User).where(User.username == username)
+    query = db.select(User).where(func.lower(User.username) == username)
     user = db.session.scalar(query)
 
     user_id = get_jwt_identity()
@@ -62,6 +62,25 @@ def get_user_from_username(username):
     user_response['user']['is_followed'] = client_user.check_if_followed(user.id)
 
     return user_response, 200
+
+@bp.get('/<username>/check')
+def check_username_availability (username):
+
+    username = username.lower()
+
+    print(username)
+
+    query = db.select(User).where(func.lower(User.username) == username)
+
+    print(query)
+
+    user = db.session.scalar(query)
+
+    print(user)
+
+    response = {'available': True if not user else False}
+
+    return response, 200
 
 @bp.patch('')
 @jwt_required()

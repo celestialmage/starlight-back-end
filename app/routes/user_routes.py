@@ -103,7 +103,7 @@ def edit_profile():
 
     request_body = request.get_json()
 
-    if user_token is not request_body['id']:
+    if user_token != request_body['id']:
 
         response = {'message': 'profile being edited is not the user\'s'}
 

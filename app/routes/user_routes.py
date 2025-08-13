@@ -15,9 +15,6 @@ def create_user():
 
     new_user = model_from_request(cls=User, request=request)
 
-    query = db.select(User).where(User.username == new_user.username)
-    guy = db.session.scalars(query)
-
     try:
         db.session.add(new_user)
         db.session.commit()
@@ -45,6 +42,8 @@ def get_user():
 @jwt_required()
 def get_user_from_username(username):
 
+    username = username.lower()
+
     query = db.select(User).where(func.lower(User.username) == username)
     user = db.session.scalar(query)
 
@@ -63,20 +62,34 @@ def get_user_from_username(username):
 
     return user_response, 200
 
+@bp.get('/<username>/profile')
+@jwt_required()
+def get_user_basic_profile(username):
+
+    username = username.lower()
+
+    query = db.select(User).where(func.lower(User.username) == username)
+    user = db.session.scalar(query)
+
+    if not user:
+        response = {'message': 'user not found'}
+        abort(make_response(response, 404))
+
+    user_response = {
+        'user': user.to_dict()
+    }
+
+    return user_response, 200
+
+
 @bp.get('/<username>/check')
 def check_username_availability (username):
 
     username = username.lower()
 
-    print(username)
-
     query = db.select(User).where(func.lower(User.username) == username)
 
-    print(query)
-
     user = db.session.scalar(query)
-
-    print(user)
 
     response = {'available': True if not user else False}
 
@@ -88,9 +101,9 @@ def edit_profile():
 
     user_token = get_jwt_identity()
 
-    request_stuff = request.get_json()
+    request_body = request.get_json()
 
-    edited_profile = request_stuff
+    edited_profile = request_body
 
     user = validate_model(User, user_token)
 

@@ -89,6 +89,8 @@ class User(db.Model):
             self.display_name = user_data['display_name']
         if user_data.get('bio'):
             self.bio = user_data['bio']
+        if user_data.get('username'):
+            self.username = user_data['username']
     
     @classmethod
     def from_dict(cls, user_data):

@@ -103,6 +103,12 @@ def edit_profile():
 
     request_body = request.get_json()
 
+    if user_token is not request_body['id']:
+
+        response = {'message': 'profile being edited is not the user\'s'}
+
+        abort(make_response(response, 403))
+
     edited_profile = request_body
 
     user = validate_model(User, user_token)

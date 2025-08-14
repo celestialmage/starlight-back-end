@@ -12,7 +12,7 @@ if TYPE_CHECKING:
     from .reply import Reply
 
 class Post(db.Model):
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, unique=True)
     user_id: Mapped[str] = mapped_column(ForeignKey('user.id'), index=True)
     text: Mapped[Optional[str]]
     image: Mapped[Optional[str]]

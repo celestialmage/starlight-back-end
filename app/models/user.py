@@ -13,7 +13,7 @@ if TYPE_CHECKING:
 
 class User(db.Model):
     id: Mapped[str] = mapped_column(primary_key=True, index=True, unique=True)
-    username: Mapped[str]
+    username: Mapped[str] = mapped_column(unique=True)
     bio: Mapped[str]
     display_name: Mapped[str]
     email: Mapped[str] = mapped_column(unique=True)

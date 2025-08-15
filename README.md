@@ -12,15 +12,12 @@ This is the backend API for **Starlight**, a social media platform where users c
 **Database & ORM**
 
 * **Flask SQLAlchemy** — ORM for database interactions.
-* **Flask Migrate** — Handles database migrations.
 * **PostgreSQL** (or other SQL databases) — Backing database.
-* **Declarative Base Models** — Using SQLAlchemy ORM `Mapped` types.
 
 **Authentication & Security**
 
 * **Flask-JWT-Extended** — Handles JWT access and refresh tokens.
 * **Google OAuth2** — For login via Google credentials.
-* **Werkzeug** — HTTP exception handling.
 * **Flask-CORS** — Enables cross-origin requests.
 
 **Utilities**
